@@ -12,6 +12,11 @@ class MedicationScreenState extends State<MedicationScreen> {
   List<Medication> medications = []; // Initialize medications list
 
   @override
+  void initState() {
+    super.initState();
+    medications = [];
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
@@ -23,11 +28,16 @@ class MedicationScreenState extends State<MedicationScreen> {
             const Text('key: ,'),
             const SizedBox(height: 8),
             Container(
+              height: 200,
               padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.blue,
+                  width: 2.0,
+                ),
                 borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
-                color: Colors.blue, // Change the color as needed
+                color: Colors.white, // Change the color as needed
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18.0),

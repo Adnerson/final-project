@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project1/screens/medication_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,7 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -88,8 +88,7 @@ class _LoginState extends State<Login> {
                           if (emailController.text == "heheheha" && passwordController.text == "abc123") {// replace with database confirmation
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => HomePage(
-                                email: emailController.text ))
+                              MaterialPageRoute(builder: (context) => MedicationScreen())
                             );
                           } else {//
                             ScaffoldMessenger.of(context).showSnackBar(
