@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project1/screens/medication_screen.dart';
+import 'package:project1/screens/diagnosis_screen.dart';
+import 'package:project1/screens/call_screen.dart';
+import 'package:project1/screens/home_screen.dart';
+import 'package:project1/screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,144 +15,77 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue
+        primarySwatch: Colors.blue,
+        primaryColor: const Color.fromARGB(255, 97, 97, 97)
       ),
-      home: const Login(title: 'Login'),
+      routes: {
+        '/meds' : (context) => const MedicationScreen(),
+        '/diagnosis' : (context) => const DiagnosisScreen(),
+        '/call' : (context) => const CallScreen(),
+        '/home' : (context) => const MyHomePage(),
+        '/login' : (context) => const LoginScreen(),
+      },
+      initialRoute: '/login'
     );
   }
 }
 
-class Login extends StatefulWidget {
-  const Login({super.key, required this.title});
-
-  final String title;
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _LoginState extends State<Login> {
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+class MyHomePageState extends State<MyHomePage> {
+  int _currentIndex = 0;
+  final List<Widget> _screens = [
+    const MedicationScreen(),
+    const DiagnosisScreen(),
+    const CallScreen(),
+    const HomeScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar (
-        title: Text(widget.title),
-      ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Email"),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              Padding(
-                padding: 
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Password",),
-                  validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
-                ),
-              ),
-              Padding(
-                padding: 
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 16.0),
-                   child: Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) { 
-                          if (emailController.text == "heheheha" && passwordController.text == "abc123") {// replace with database confirmation
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => MedicationScreen())
-                            );
-                          } else {//
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Invalid Credentials')
-                              )
-                            );
-                          }        
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please fill input')),
-                          );
-                        }
-                      },
-                      child: const Text('Submit'))
-                   )
-              )
-            ]
+      appBar: AppBar(
+        title: const Text('MedAssist',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           )
-        )
-      )
+        ),
+        backgroundColor: Colors.blue,
+      ),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.blue,
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.white,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.medication_outlined),
+            label: 'Medication',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.phone),
+            label: 'Contact',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.health_and_safety),
+            label: 'Diagnosis',
+          ),
+        ],
+      ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key, required this.email});
-
-  final String email;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home Page'),
-        ),
-        body: Column(
-          children: [
-            Text(email),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("Go back!"),
-              ),
-            ),
-          ],
-        ));
-  }
-}
-
-class Medication {
-  String name;
-  String timeToTake;
-  int number;
-
-  Medication(this.name, this.timeToTake, this.number); 
-
-  getName() {return name;}
-  getTime() {return timeToTake;}
-  getNumber() {return number;}
-}

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project1/main.dart';
+import 'package:project1/classes.dart';
 
 class MedicationScreen extends StatefulWidget {
   const MedicationScreen({Key? key}) : super(key: key);
@@ -112,26 +112,15 @@ class NewMedicationWidgetState extends State<NewMedicationWidget> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Validate input
-              if (nameController.text.isNotEmpty &&
-                  timeController.text.isNotEmpty &&
-                  quantityController.text.isNotEmpty) {
+
                 String name = nameController.text;
                 String time = timeController.text;
                 int quantity = int.tryParse(quantityController.text) ?? 0;
-
                 Medication newMedication = Medication(name, time, quantity);
-
-                MedicationScreenState screenState = context.findAncestorStateOfType<MedicationScreenState>()!;
-                screenState.setState(() {
-                  screenState.medications.add(newMedication);
+                setState(() {
+                  list.add(newMedication);
                 });
                 Navigator.of(context).pop();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please fill all fields')),
-                );
-              }
             },
             child: const Text('Save'),
           ),
