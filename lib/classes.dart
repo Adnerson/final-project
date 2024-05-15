@@ -10,5 +10,21 @@ class Medication {
   getNumber() {return number;}
 }
 
-List<Medication>list = [];
+class Doctor {
+  String name;
+  String address;
+  String specialty;
+  String number;
+
+  Doctor(this.name, this.address, this.specialty, this.number);
+
+  getName() => name;
+  getAddress() => address;
+  getSpecialty() => specialty;
+  getNumber() => number;
+}
+
+List<Medication>medications = [];
+List<Doctor>doctors = [];
+List<Doctor>primaryDoctors = [];
 

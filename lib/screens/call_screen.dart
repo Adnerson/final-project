@@ -18,7 +18,6 @@ class CallScreenState extends State<CallScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text('key: ,'),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(16),
