@@ -5,21 +5,24 @@ import 'package:project1/screens/home_screen.dart';
 import 'package:project1/screens/login_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        primaryColor: const Color.fromARGB(255, 97, 97, 97)
+        primaryColor: const Color.fromARGB(255, 97, 97, 97),
+        scaffoldBackgroundColor: Colors.grey[200], // Set scaffold background color to light gray
       ),
       routes: {
         '/diagnosis' : (context) => const DiagnosisScreen(),
@@ -27,14 +30,13 @@ class _MyAppState extends State<MyApp> {
         '/home' : (context) => const MyHomePage(),
         '/login' : (context) => const LoginScreen(),
       },
-      initialRoute: '/login'
+      initialRoute: '/login',
     );
   }
 }
 
-
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({super.key});
 
   @override
   MyHomePageState createState() => MyHomePageState();
@@ -53,7 +55,7 @@ class MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('   MedAssist',
+        title: const Text(' MedAssist',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -90,4 +92,3 @@ class MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-

@@ -1,8 +1,7 @@
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 
 class DiagnosisScreen extends StatefulWidget {
-  const DiagnosisScreen({Key? key}) : super(key: key);
+  const DiagnosisScreen({super.key});
 
   @override
   DiagnosisScreenState createState() => DiagnosisScreenState();

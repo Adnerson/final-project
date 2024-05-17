@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (emailController.text == "heheheha" && passwordController.text == "abc123") {// replace with database confirmation
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => MyHomePage())
+                              MaterialPageRoute(builder: (context) => const MyHomePage())
                             );
                           } else {//
                             ScaffoldMessenger.of(context).showSnackBar(

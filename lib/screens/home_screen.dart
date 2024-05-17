@@ -1,23 +1,15 @@
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:project1/classes.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  List<Medication> medications = [];
-
-  @override
-  void initState() {
-    super.initState();
-    medications = [];
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,15 +19,24 @@ class HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text('Welcome!'),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dashboard', style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20)),
+              ],
+            ),
             const SizedBox(height: 8),
+            // Medications Container
             Container(
               height: 150,
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.blue,
+                  color: Colors.blue, // Changed border color to blue
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(10),
@@ -61,12 +62,71 @@ class HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 _showNewMedicationDialog(context, _addMedication);
               },
-              child: Text('Add Medication'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Change button background color to blue
+              ),
+              child: const Text('Add Medication', style: TextStyle(color: Colors.white)), // Set text color to white
+            ),
+            const SizedBox(height: 20), // Spacer
+            // Appointments Container
+            Container(
+              height: 150,
+              padding: const EdgeInsets.all(8),
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.blue, // Changed border color to blue
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18.0),
+                child: ListView.builder(
+                  itemCount: appointments.length,
+                  itemBuilder: (context, index) {
+                    Appointment currentAppointment = appointments[index];
+                    return ListTile(
+                      title: Text(currentAppointment.doctorName),
+                      subtitle: Text(
+                        'Date: ${currentAppointment.getDate().toString().split(" ")[0]}, Time: ${currentAppointment.getTime()}',
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _showNewAppointmentDialog(context, _addAppointment);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Change button background color to blue
+              ),
+              child: const Text('Add Appointment', style: TextStyle(color: Colors.white)), // Set text color to white
             ),
           ],
         ),
       ),
     );
+  }
+
+  // Function to show dialog for adding new appointment
+  void _showNewAppointmentDialog(BuildContext context, Function(Appointment) addAppointment) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return NewAppointmentWidget(addAppointment: addAppointment);
+      },
+    );
+  }
+
+  // Callback function to add appointment to the list
+  void _addAppointment(Appointment newAppointment) {
+    setState(() {
+      appointments.add(newAppointment);
+    });
   }
 
   // Function to show dialog for adding new medication
@@ -90,7 +150,7 @@ class HomeScreenState extends State<HomeScreen> {
 class NewMedicationWidget extends StatefulWidget {
   final Function(Medication) addMedication;
 
-  const NewMedicationWidget({Key? key, required this.addMedication}) : super(key: key);
+  const NewMedicationWidget({super.key, required this.addMedication});
 
   @override
   NewMedicationWidgetState createState() => NewMedicationWidgetState();
@@ -130,7 +190,10 @@ class NewMedicationWidgetState extends State<NewMedicationWidget> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('Cancel')
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Change button background color to blue
+                ),
+                child: const Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
               ),
               ElevatedButton(
                 onPressed: () {
@@ -141,7 +204,80 @@ class NewMedicationWidgetState extends State<NewMedicationWidget> {
                   widget.addMedication(newMedication); // Call the callback to add the new medication
                   Navigator.of(context).pop();
                 },
-                child: const Text('Save'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Change button background color to blue
+                ),
+                child: const Text('Save', style: TextStyle(color: Colors.white)), // Set text color to white
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NewAppointmentWidget extends StatefulWidget {
+  final Function(Appointment) addAppointment;
+
+  const NewAppointmentWidget({super.key, required this.addAppointment});
+
+  @override
+  NewAppointmentWidgetState createState() => NewAppointmentWidgetState();
+}
+
+class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
+  final TextEditingController doctorController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('New Appointment'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: doctorController,
+            decoration: const InputDecoration(labelText: 'Doctor Name'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: dateController,
+            decoration: const InputDecoration(labelText: 'Date (YYYY-MM-DD)'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: timeController,
+            decoration: const InputDecoration(labelText: 'Time'),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Change button background color to blue
+                ),
+                child: const Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  String doctorName = doctorController.text;
+                  DateTime date = DateTime.parse(dateController.text);
+                  String time = timeController.text;
+                  Appointment newAppointment = Appointment(doctorName, date, time);
+                  widget.addAppointment(newAppointment); // Call the callback to add the new appointment
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Change button background color to blue
+                ),
+                child: const Text('Save', style: TextStyle(color: Colors.white)), // Set text color to white
               ),
             ],
           ),
