@@ -16,22 +16,21 @@ class HomeScreenState extends State<HomeScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Dashboard', style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20)),
-              ],
+            const Text(
+              'Dashboard',
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             // Medications Container
             Container(
-              height: 150,
+              height: 200, // Increased container height
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
@@ -44,7 +43,8 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18.0),
-                child: ListView.builder(
+                child: ListView.separated( // Changed to ListView.separated to add Dividers
+                  separatorBuilder: (context, index) => const Divider(color: Colors.black), // Added Divider
                   itemCount: medications.length,
                   itemBuilder: (context, index) {
                     Medication currentMedication = medications[index];
@@ -52,6 +52,14 @@ class HomeScreenState extends State<HomeScreen> {
                       title: Text(currentMedication.name),
                       subtitle: Text(
                         'Take ${currentMedication.getNumber()} pills at ${currentMedication.getTime()}',
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          setState(() {
+                            medications.removeAt(index);
+                          });
+                        },
                       ),
                     );
                   },
@@ -65,12 +73,15 @@ class HomeScreenState extends State<HomeScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue, // Change button background color to blue
               ),
-              child: const Text('Add Medication', style: TextStyle(color: Colors.white)), // Set text color to white
+              child: const Text(
+                'Add Medication',
+                style: TextStyle(color: Colors.white),
+              ), // Set text color to white
             ),
             const SizedBox(height: 20), // Spacer
             // Appointments Container
             Container(
-              height: 150,
+              height: 200, // Increased container height
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
@@ -83,7 +94,8 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18.0),
-                child: ListView.builder(
+                child: ListView.separated( // Changed to ListView.separated to add Dividers
+                  separatorBuilder: (context, index) => const Divider(color: Colors.black), // Added Divider
                   itemCount: appointments.length,
                   itemBuilder: (context, index) {
                     Appointment currentAppointment = appointments[index];
@@ -91,6 +103,14 @@ class HomeScreenState extends State<HomeScreen> {
                       title: Text(currentAppointment.doctorName),
                       subtitle: Text(
                         'Date: ${currentAppointment.getDate().toString().split(" ")[0]}, Time: ${currentAppointment.getTime()}',
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          setState(() {
+                            appointments.removeAt(index);
+                          });
+                        },
                       ),
                     );
                   },
@@ -104,7 +124,10 @@ class HomeScreenState extends State<HomeScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue, // Change button background color to blue
               ),
-              child: const Text('Add Appointment', style: TextStyle(color: Colors.white)), // Set text color to white
+              child: const Text(
+                'Add Appointment',
+                style: TextStyle(color: Colors.white),
+              ), // Set text color to white
             ),
           ],
         ),
