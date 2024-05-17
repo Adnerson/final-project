@@ -22,7 +22,7 @@ class MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: const Color.fromARGB(255, 97, 97, 97),
-        scaffoldBackgroundColor: Colors.grey[200], // Set scaffold background color to light gray
+        scaffoldBackgroundColor: Colors.grey[200],
       ),
       routes: {
         '/diagnosis' : (context) => const DiagnosisScreen(),

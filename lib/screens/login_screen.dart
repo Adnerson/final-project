@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) { 
-                          if (emailController.text == "heheheha" && passwordController.text == "abc123") {// replace with database confirmation
+                          if (emailController.text == "heheheha" && passwordController.text == "abc123") {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => const MyHomePage())

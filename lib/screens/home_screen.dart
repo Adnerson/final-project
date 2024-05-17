@@ -28,14 +28,13 @@ class HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            // Medications Container
             Container(
-              height: 200, // Increased container height
+              height: 200,
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.blue, // Changed border color to blue
+                  color: Colors.blue,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(10),
@@ -43,8 +42,8 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18.0),
-                child: ListView.separated( // Changed to ListView.separated to add Dividers
-                  separatorBuilder: (context, index) => const Divider(color: Colors.black), // Added Divider
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const Divider(color: Colors.black),
                   itemCount: medications.length,
                   itemBuilder: (context, index) {
                     Medication currentMedication = medications[index];
@@ -71,22 +70,21 @@ class HomeScreenState extends State<HomeScreen> {
                 _showNewMedicationDialog(context, _addMedication);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Change button background color to blue
+                backgroundColor: Colors.blue,
               ),
               child: const Text(
                 'Add Medication',
                 style: TextStyle(color: Colors.white),
-              ), // Set text color to white
+              ),
             ),
-            const SizedBox(height: 20), // Spacer
-            // Appointments Container
+            const SizedBox(height: 20),
             Container(
-              height: 200, // Increased container height
+              height: 200,
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.blue, // Changed border color to blue
+                  color: Colors.blue,
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(10),
@@ -94,8 +92,8 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18.0),
-                child: ListView.separated( // Changed to ListView.separated to add Dividers
-                  separatorBuilder: (context, index) => const Divider(color: Colors.black), // Added Divider
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const Divider(color: Colors.black),
                   itemCount: appointments.length,
                   itemBuilder: (context, index) {
                     Appointment currentAppointment = appointments[index];
@@ -122,12 +120,12 @@ class HomeScreenState extends State<HomeScreen> {
                 _showNewAppointmentDialog(context, _addAppointment);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Change button background color to blue
+                backgroundColor: Colors.blue,
               ),
               child: const Text(
                 'Add Appointment',
                 style: TextStyle(color: Colors.white),
-              ), // Set text color to white
+              ),
             ),
           ],
         ),
@@ -135,7 +133,6 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Function to show dialog for adding new appointment
   void _showNewAppointmentDialog(BuildContext context, Function(Appointment) addAppointment) {
     showDialog(
       context: context,
@@ -145,14 +142,12 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Callback function to add appointment to the list
   void _addAppointment(Appointment newAppointment) {
     setState(() {
       appointments.add(newAppointment);
     });
   }
 
-  // Function to show dialog for adding new medication
   void _showNewMedicationDialog(BuildContext context, Function(Medication) addMedication) {
   showDialog(
     context: context,
@@ -162,7 +157,6 @@ class HomeScreenState extends State<HomeScreen> {
   );
 }
 
-  // Callback function to add medication to the list
   void _addMedication(Medication newMedication) {
     setState(() {
       medications.add(newMedication);
@@ -214,9 +208,9 @@ class NewMedicationWidgetState extends State<NewMedicationWidget> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Change button background color to blue
+                  backgroundColor: Colors.blue,
                 ),
-                child: const Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
+                child: const Text('Cancel', style: TextStyle(color: Colors.white)),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -224,13 +218,13 @@ class NewMedicationWidgetState extends State<NewMedicationWidget> {
                   String time = timeController.text;
                   int quantity = int.tryParse(quantityController.text) ?? 0;
                   Medication newMedication = Medication(name, time, quantity);
-                  widget.addMedication(newMedication); // Call the callback to add the new medication
+                  widget.addMedication(newMedication);
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Change button background color to blue
+                  backgroundColor: Colors.blue,
                 ),
-                child: const Text('Save', style: TextStyle(color: Colors.white)), // Set text color to white
+                child: const Text('Save', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -284,9 +278,9 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Change button background color to blue
+                  backgroundColor: Colors.blue,
                 ),
-                child: const Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
+                child: const Text('Cancel', style: TextStyle(color: Colors.white)),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -294,13 +288,13 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                   DateTime date = DateTime.parse(dateController.text);
                   String time = timeController.text;
                   Appointment newAppointment = Appointment(doctorName, date, time);
-                  widget.addAppointment(newAppointment); // Call the callback to add the new appointment
+                  widget.addAppointment(newAppointment);
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Change button background color to blue
+                  backgroundColor: Colors.blue,
                 ),
-                child: const Text('Save', style: TextStyle(color: Colors.white)), // Set text color to white
+                child: const Text('Save', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),

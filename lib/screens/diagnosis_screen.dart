@@ -22,14 +22,14 @@ class DiagnosisScreenState extends State<DiagnosisScreen> {
               padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.symmetric(vertical: 8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
-                color: Colors.blue, // Change the color as needed
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.blue,
               ),
               child: const Text(
                 'Hello World',
                 style: TextStyle(
-                  color: Colors.white, // Change the text color as needed
-                  fontSize: 18, // Change the font size as needed
+                  color: Colors.white,
+                  fontSize: 18,
                 ),
               ),
             ),

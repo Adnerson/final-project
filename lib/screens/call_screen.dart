@@ -47,11 +47,11 @@ class CallScreenState extends State<CallScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Set button background color
+                backgroundColor: Colors.blue,
               ),
               child: Text(
                 showPrimaryDoctors ? 'Show All Doctors' : 'Show Primary Doctors',
-                style: const TextStyle(color: Colors.white), // Set button text color
+                style: const TextStyle(color: Colors.white),
               ),
             ),
             const SizedBox(height: 8),
@@ -67,7 +67,7 @@ class CallScreenState extends State<CallScreen> {
                     padding: const EdgeInsets.all(16),
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.white, // Change container color to blue
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
