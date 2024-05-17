@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project1/classes.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -245,29 +246,72 @@ class NewAppointmentWidget extends StatefulWidget {
 
 class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
   final TextEditingController doctorController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
   final TextEditingController timeController = TextEditingController();
+
+  DateTime? selectedDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(DateTime.now().year + 5),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white, // Set background color to white
       title: const Text('New Appointment'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: doctorController,
-            decoration: const InputDecoration(labelText: 'Doctor Name'),
+            decoration: InputDecoration(
+              labelText: 'Doctor Name',
+              // Set hint color to black
+              labelStyle: TextStyle(color: Colors.black),
+            ),
           ),
           const SizedBox(height: 10),
-          TextField(
-            controller: dateController,
-            decoration: const InputDecoration(labelText: 'Date (YYYY-MM-DD)'),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  readOnly: true,
+                  controller: TextEditingController(text: selectedDate != null ? DateFormat('yyyy-MM-dd').format(selectedDate!) : ''),
+                  decoration: InputDecoration(
+                    labelText: 'Date (YYYY-MM-DD)',
+                    // Set hint color to black
+                    labelStyle: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _selectDate(context);
+                }, // Set button text color to white
+                // Use blue color for button background
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                child: const Text('Select Date', style: TextStyle(color: Colors.white)),
+              ),
+            ],
           ),
           const SizedBox(height: 10),
           TextField(
             controller: timeController,
-            decoration: const InputDecoration(labelText: 'Time'),
+            decoration: InputDecoration(
+              labelText: 'Time',
+              // Set hint color to black
+              labelStyle: TextStyle(color: Colors.black),
+            ),
           ),
           const SizedBox(height: 16),
           Row(
@@ -278,23 +322,29 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.blue, // Set button background color to blue
                 ),
-                child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+                child: const Text('Cancel', style: TextStyle(color: Colors.white)), // Set button text color to white
               ),
               ElevatedButton(
                 onPressed: () {
                   String doctorName = doctorController.text;
-                  DateTime date = DateTime.parse(dateController.text);
                   String time = timeController.text;
-                  Appointment newAppointment = Appointment(doctorName, date, time);
-                  widget.addAppointment(newAppointment);
-                  Navigator.of(context).pop();
+                  if (selectedDate != null) {
+                    Appointment newAppointment = Appointment(doctorName, selectedDate!, time);
+                    widget.addAppointment(newAppointment); // Call the callback to add the new appointment
+                    Navigator.of(context).pop();
+                  } else {
+                    // Show a snackbar or alert to indicate that date is not selected
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a date.'),
+                    ));
+                  }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.blue, // Set button background color to blue
                 ),
-                child: const Text('Save', style: TextStyle(color: Colors.white)),
+                child: const Text('Save', style: TextStyle(color: Colors.white)), // Set button text color to white
               ),
             ],
           ),
