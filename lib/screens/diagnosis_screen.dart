@@ -15,9 +15,8 @@ class DiagnosisScreenState extends State<DiagnosisScreen> {
 
   Future<void> getDiagnosis(String symptoms) async {
     try {
-      const apiKey = 'YOUR_OPENAI_API_KEY';
-      const endpoint = 'https://api.openai.com/v1/...'; // Replace with the API endpoint
-
+      const apiKey = '';
+      const endpoint = 'https://api.openai.com/v1/...';
       final response = await http.post(
         Uri.parse(endpoint),
         headers: {

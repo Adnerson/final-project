@@ -339,7 +339,7 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                 ),
-                child: const Text('Save', style: TextStyle(color: Colors.white)), // Set button text color to white
+                child: const Text('Save', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),

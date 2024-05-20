@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               context,
                               MaterialPageRoute(builder: (context) => const MyHomePage())
                             );
-                          } else {//
+                          } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Invalid Credentials')
