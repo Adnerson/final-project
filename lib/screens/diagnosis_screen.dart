@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project1/classes.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class DiagnosisScreen extends StatefulWidget {
@@ -10,28 +12,39 @@ class DiagnosisScreen extends StatefulWidget {
 
 class DiagnosisScreenState extends State<DiagnosisScreen> {
   final TextEditingController symptomController = TextEditingController();
-  String symptoms = '';
-  String diagnosis = '';
 
-  Future<void> getDiagnosis() async {
-    const apiKey = 'YOUR_OPENAI_API_KEY';
-    const endpoint = 'https://api.openai.com/v1/completions';
+  Future<void> getDiagnosis(String symptoms) async {
+    try {
+      const apiKey = 'YOUR_OPENAI_API_KEY';
+      const endpoint = 'https://api.openai.com/v1/...'; // Replace with the API endpoint
 
-    final response = await http.post(
-      Uri.parse(endpoint),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $apiKey',
-      },
-      body: '{"prompt": "$symptoms"}',
-    );
+      final response = await http.post(
+        Uri.parse(endpoint),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $apiKey',
+        },
+        body: jsonEncode({
+          'prompt': "As a medical assistant, I'm tasked with receiving symptoms from a user and providing potential causes, future steps, and the type of doctor to refer to. The symptoms I received are: $symptoms",
+          'max_tokens': 150,
+          'stop': ['\n'],
+        }),
+      );
 
-    if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        setState(() {
+          diagnosis = jsonResponse['choices'][0]['text'].trim();
+        });
+      } else {
+        setState(() {
+          diagnosis = 'Failed to get diagnosis. Please try again later.';
+        });
+      }
+    } catch (e) {
       setState(() {
-        diagnosis = response.body;
+        diagnosis = 'Failed to get diagnosis. Please try again later.';
       });
-    } else {
-      diagnosis = ('Failed to get diagnosis. Status code: ${response.statusCode}');
     }
   }
 
@@ -73,7 +86,7 @@ class DiagnosisScreenState extends State<DiagnosisScreen> {
                 maxLines: 5,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  labelText: 'Enter how you\'re feeling',
+                  labelText: 'Enter symptoms',
                   alignLabelWithHint: true,
                 ),
               ),
@@ -81,10 +94,8 @@ class DiagnosisScreenState extends State<DiagnosisScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  symptoms = symptomController.text;
-                });
-                getDiagnosis();
+                final symptoms = symptomController.text;
+                getDiagnosis(symptoms);
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white, 
@@ -102,7 +113,9 @@ class DiagnosisScreenState extends State<DiagnosisScreen> {
                 border: Border.all(color: Colors.blue),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Text(diagnosis),
+              child: SingleChildScrollView(
+                child: Text(diagnosis),
+              ),
             ),
           ],
         ),

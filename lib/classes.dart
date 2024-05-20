@@ -53,3 +53,5 @@ List<Doctor> doctors = [
   Doctor('Emma Watson', '135 Cedar St', 'Ophthalmologist', '3333333333'),
 ];
 List<Doctor> primaryDoctors = [];
+String symptoms = '';
+String diagnosis = '';
