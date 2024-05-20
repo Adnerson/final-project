@@ -267,16 +267,15 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white, // Set background color to white
+      backgroundColor: Colors.white,
       title: const Text('New Appointment'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: doctorController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Doctor Name',
-              // Set hint color to black
               labelStyle: TextStyle(color: Colors.black),
             ),
           ),
@@ -287,9 +286,8 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                 child: TextField(
                   readOnly: true,
                   controller: TextEditingController(text: selectedDate != null ? DateFormat('yyyy-MM-dd').format(selectedDate!) : ''),
-                  decoration: InputDecoration(
-                    labelText: 'Date (YYYY-MM-DD)',
-                    // Set hint color to black
+                  decoration: const InputDecoration(
+                    labelText: 'Date',
                     labelStyle: TextStyle(color: Colors.black),
                   ),
                 ),
@@ -297,8 +295,7 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
               ElevatedButton(
                 onPressed: () {
                   _selectDate(context);
-                }, // Set button text color to white
-                // Use blue color for button background
+                },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 child: const Text('Select Date', style: TextStyle(color: Colors.white)),
               ),
@@ -307,9 +304,8 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
           const SizedBox(height: 10),
           TextField(
             controller: timeController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Time',
-              // Set hint color to black
               labelStyle: TextStyle(color: Colors.black),
             ),
           ),
@@ -322,9 +318,9 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Set button background color to blue
+                  backgroundColor: Colors.blue,
                 ),
-                child: const Text('Cancel', style: TextStyle(color: Colors.white)), // Set button text color to white
+                child: const Text('Cancel', style: TextStyle(color: Colors.white)),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -332,17 +328,16 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                   String time = timeController.text;
                   if (selectedDate != null) {
                     Appointment newAppointment = Appointment(doctorName, selectedDate!, time);
-                    widget.addAppointment(newAppointment); // Call the callback to add the new appointment
+                    widget.addAppointment(newAppointment);
                     Navigator.of(context).pop();
                   } else {
-                    // Show a snackbar or alert to indicate that date is not selected
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('Please select a date.'),
                     ));
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Set button background color to blue
+                  backgroundColor: Colors.blue,
                 ),
                 child: const Text('Save', style: TextStyle(color: Colors.white)), // Set button text color to white
               ),
