@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:project1/screens/diagnosis_screen.dart';
-import 'package:project1/screens/call_screen.dart';
-import 'package:project1/screens/home_screen.dart';
-import 'package:project1/screens/login_screen.dart';
+import 'package:project1/user_provider.dart';
+import 'package:provider/provider.dart';
+import 'screens/user_screen.dart';
+import 'screens/call_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -25,10 +32,10 @@ class MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: Colors.grey[200],
       ),
       routes: {
-        '/diagnosis' : (context) => const DiagnosisScreen(),
-        '/call' : (context) => const CallScreen(),
-        '/home' : (context) => const MyHomePage(),
-        '/login' : (context) => const LoginScreen(),
+        '/diagnosis': (context) => const UserScreen(),
+        '/call': (context) => const CallScreen(),
+        '/home': (context) => const MyHomePage(),
+        '/login': (context) => const LoginScreen(),
       },
       initialRoute: '/login',
     );
@@ -47,7 +54,7 @@ class MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screens = [
     const CallScreen(),
     const HomeScreen(),
-    const DiagnosisScreen(),
+    const UserScreen(),
   ];
 
   @override
@@ -55,12 +62,13 @@ class MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text(' MedAssist',
+        title: const Text(
+          ' MedAssist',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24,
             fontWeight: FontWeight.bold,
-          )
+          ),
         ),
         backgroundColor: Colors.blue,
       ),
@@ -84,8 +92,8 @@ class MyHomePageState extends State<MyHomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.health_and_safety),
-            label: 'Diagnosis',
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

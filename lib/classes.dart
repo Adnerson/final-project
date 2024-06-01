@@ -3,11 +3,37 @@ class Medication {
   String timeToTake;
   int number;
 
-  Medication(this.name, this.timeToTake, this.number); 
+  Medication(this.name, this.timeToTake, this.number);
 
-  getName() {return name;}
-  getTime() {return timeToTake;}
-  getNumber() {return number;}
+  String getName() => name;
+  String getTime() => timeToTake;
+  int getNumber() => number;
+}
+
+class User {
+  static int _idCounter = 0;  // Static variable to keep track of the last id
+  int userid;
+  String name;
+  String password;
+  String email;
+  bool isDoctor;
+  String address;
+  String number;
+  List<Medication> medications = [];
+  List<Appointment> appointments = [];
+
+  User(this.name, this.password, this.email, this.isDoctor, this.address, this.number) : userid = _idCounter++;
+
+  String getName() => name;
+  String getPassword() => password;
+  String getEmail() => email;
+  String getAddress() => address;
+  String getNumber() => number;
+  setName(newName) => name = newName;
+  setPassword(newPassword) => password = newPassword;
+  setEmail(newEmail) => email = newEmail;
+  setAddress(newAddress) => address = newAddress;
+  setNumber(newNumber) => number = newNumber;
 }
 
 class Doctor {
@@ -18,30 +44,34 @@ class Doctor {
   bool isPrimary = false;
 
   Doctor(this.name, this.address, this.specialty, this.number);
+
   void togglePrimary() {
     isPrimary = !isPrimary;
   }
-  getName() => name;
-  getAddress() => address;
-  getSpecialty() => specialty;
-  getNumber() => number;
+
+  String getName() => name;
+  String getAddress() => address;
+  String getSpecialty() => specialty;
+  String getNumber() => number;
 }
 
 class Appointment {
-  String doctorName;
+  static int _idCounter = 0;  // Static variable to keep track of the last id
+  int appointmentid;
+  String title;
   DateTime date;
-  String time;
+  String description;
 
-  Appointment(this.doctorName, this.date, this.time);
+  Appointment(this.title, this.date, this.description) : appointmentid = _idCounter++;
 
-  getDoctorName() => doctorName;
-  getDate() => date;
-  getTime() => time;
+  int getAppointmentid() => appointmentid;
+  String getTitle() => title;
+  DateTime getDate() => date;
+  String getDescription() => description;
 }
 
-
-List<Medication>medications = [];
-List<Appointment>appointments = [];
+List<Medication> medications = [];
+List<Appointment> appointments = [];
 List<Doctor> doctors = [
   Doctor('Stephen Strange', '123 Main St', 'Pediatrician', '2939393939'),
   Doctor('John Doe', '456 Elm St', 'Cardiologist', '5555555555'),

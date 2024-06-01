@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project1/classes.dart';
+import 'package:project1/user_provider.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,75 +14,107 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  
+  final TextEditingController symptomController = TextEditingController();
+
+  void getDiagnosis(String symptoms) async {
+  try {
+    const apiKey = '';
+    const endpoint = 'https://api.openai.com/v1/...';
+    final response = await http.post(
+      Uri.parse(endpoint),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $apiKey',
+      },
+      body: jsonEncode({
+        'prompt': "As a medical assistant, I'm tasked with receiving symptoms from a user and providing potential causes, future steps, and the type of doctor to refer to. The symptoms I received are: $symptoms",
+        'max_tokens': 150,
+        'stop': ['\n'],
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      setState(() {
+        diagnosis = jsonResponse['choices'][0]['text'].trim();
+      });
+    } else {
+      setState(() {
+        diagnosis = 'Failed to get diagnosis. Please try again later.';
+      });
+    }
+  } catch (e) {
+    setState(() {
+      diagnosis = 'Failed to get diagnosis. Please try again later.';
+    });
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.user;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text(
-              'Dashboard',
+              'How Can We Help?',
               style: TextStyle(
                 color: Colors.blue,
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
             ),
-            const SizedBox(height: 16),
-            Container(
-              height: 200,
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(18.0),
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const Divider(color: Colors.black),
-                  itemCount: medications.length,
-                  itemBuilder: (context, index) {
-                    Medication currentMedication = medications[index];
-                    return ListTile(
-                      title: Text(currentMedication.name),
-                      subtitle: Text(
-                        'Take ${currentMedication.getNumber()} pills at ${currentMedication.getTime()}',
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            medications.removeAt(index);
-                          });
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                _showNewMedicationDialog(context, _addMedication);
+                print('test');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
               ),
               child: const Text(
-                'Add Medication',
+                'View your schedule',
                 style: TextStyle(color: Colors.white),
               ),
             ),
             const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.blue),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextField(
+                controller: symptomController,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  labelText: 'Enter symptoms',
+                  alignLabelWithHint: true,
+                ),
+              ),
+            ),
+            /*Container(
+              height: 200,
+              width: 400,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.blue),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SingleChildScrollView(
+                child: Text(diagnosis),
+              ),
+            ),*/
             Container(
               height: 200,
               padding: const EdgeInsets.all(8),
@@ -95,19 +131,17 @@ class HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(18.0),
                 child: ListView.separated(
                   separatorBuilder: (context, index) => const Divider(color: Colors.black),
-                  itemCount: appointments.length,
+                  itemCount: user!.appointments.length,
                   itemBuilder: (context, index) {
-                    Appointment currentAppointment = appointments[index];
+                    Appointment currentAppointment = user.appointments[index];
                     return ListTile(
-                      title: Text(currentAppointment.doctorName),
-                      subtitle: Text(
-                        'Date: ${currentAppointment.getDate().toString().split(" ")[0]}, Time: ${currentAppointment.getTime()}',
-                      ),
+                      title: Text('${currentAppointment.title}: ${currentAppointment.getDate().toString().split(" ")[0]}'),
+                      subtitle: Text('${currentAppointment.getDescription()}'),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
                         onPressed: () {
                           setState(() {
-                            appointments.removeAt(index);
+                            userProvider.removeAppointment(index);
                           });
                         },
                       ),
@@ -118,7 +152,7 @@ class HomeScreenState extends State<HomeScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                _showNewAppointmentDialog(context, _addAppointment);
+                _showNewAppointmentDialog(context, userProvider.addAppointment);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
@@ -142,97 +176,6 @@ class HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
-  void _addAppointment(Appointment newAppointment) {
-    setState(() {
-      appointments.add(newAppointment);
-    });
-  }
-
-  void _showNewMedicationDialog(BuildContext context, Function(Medication) addMedication) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return NewMedicationWidget(addMedication: addMedication);
-    },
-  );
-}
-
-  void _addMedication(Medication newMedication) {
-    setState(() {
-      medications.add(newMedication);
-    });
-  }
-}
-
-class NewMedicationWidget extends StatefulWidget {
-  final Function(Medication) addMedication;
-
-  const NewMedicationWidget({super.key, required this.addMedication});
-
-  @override
-  NewMedicationWidgetState createState() => NewMedicationWidgetState();
-}
-
-class NewMedicationWidgetState extends State<NewMedicationWidget> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
-  final TextEditingController quantityController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('New Medication'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: nameController,
-            decoration: const InputDecoration(labelText: 'Name'),
-          ),
-          const SizedBox(height: 20),
-          TextField(
-            controller: timeController,
-            decoration: const InputDecoration(labelText: 'Time'),
-          ),
-          const SizedBox(height: 20),
-          TextField(
-            controller: quantityController,
-            decoration: const InputDecoration(labelText: 'Amount'),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                ),
-                child: const Text('Cancel', style: TextStyle(color: Colors.white)),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  String name = nameController.text;
-                  String time = timeController.text;
-                  int quantity = int.tryParse(quantityController.text) ?? 0;
-                  Medication newMedication = Medication(name, time, quantity);
-                  widget.addMedication(newMedication);
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                ),
-                child: const Text('Save', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class NewAppointmentWidget extends StatefulWidget {
@@ -245,9 +188,8 @@ class NewAppointmentWidget extends StatefulWidget {
 }
 
 class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
-  final TextEditingController doctorController = TextEditingController();
-  final TextEditingController timeController = TextEditingController();
-
+  final TextEditingController TitleController = TextEditingController();
+  final TextEditingController DescriptionController = TextEditingController();
   DateTime? selectedDate;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -273,9 +215,9 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: doctorController,
+            controller: TitleController,
             decoration: const InputDecoration(
-              labelText: 'Doctor Name',
+              labelText: 'Title',
               labelStyle: TextStyle(color: Colors.black),
             ),
           ),
@@ -303,9 +245,9 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
           ),
           const SizedBox(height: 10),
           TextField(
-            controller: timeController,
+            controller: DescriptionController,
             decoration: const InputDecoration(
-              labelText: 'Time',
+              labelText: 'Description',
               labelStyle: TextStyle(color: Colors.black),
             ),
           ),
@@ -324,15 +266,15 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  String doctorName = doctorController.text;
-                  String time = timeController.text;
+                  String title = TitleController.text;
+                  String description = DescriptionController.text;
                   if (selectedDate != null) {
-                    Appointment newAppointment = Appointment(doctorName, selectedDate!, time);
+                    Appointment newAppointment = Appointment(title, selectedDate!, description);
                     widget.addAppointment(newAppointment);
                     Navigator.of(context).pop();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Please select a date.'),
+                      content: Text('Please Enter a Date'),
                     ));
                   }
                 },
