@@ -1,6 +1,5 @@
 // ignore: file_names
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 
 enum Method { POST, GET, DELETE, PATCH }
