@@ -2,8 +2,8 @@ const baseUrl = "http://localhost:8080";
 
 const postgresql = "/db/postgresql";
 
-const users = "$postgresql/users";
-const doctors = "$postgresql/doctors";
+const postgresqlUsers = "$postgresql/users/";
+const postgresqlDoctors = "$postgresql/doctors/";
 
 
 // const allLists = "/";

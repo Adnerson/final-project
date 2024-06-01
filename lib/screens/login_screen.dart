@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project1/services/func.dart';
 import 'package:provider/provider.dart';
 import 'package:project1/main.dart';
 import 'package:project1/classes.dart';
@@ -11,7 +12,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with Func {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -78,7 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFormField(
                     controller: numberController,
-                    decoration: const InputDecoration(labelText: 'Phone Number'),
+                    decoration:
+                        const InputDecoration(labelText: 'Phone Number'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your phone number';
@@ -102,7 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     addressController.text,
                     numberController.text,
                   );
-                  Provider.of<UserProvider>(context, listen: false).createUser(user);
+                  Provider.of<UserProvider>(context, listen: false)
+                      .createUser(user);
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('User created successfully!')),
@@ -138,80 +141,9 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Email",
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Password",
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final userProvider = Provider.of<UserProvider>(context, listen: false);
-                        final user = userProvider.validateCredentials(
-                          emailController.text,
-                          passwordController.text,
-                        );
-                        if (user != null) {
-                          userProvider.login(user);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const MyHomePage()),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Invalid Credentials')),
-                          );
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please fill input')),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: const Text('Submit', style: TextStyle(color: Colors.white)),
-                  ),
-                ),
-              ),
+              emailField(),
+              passwordField(),
+              submitButton(context),
               TextButton(
                 onPressed: () => _createUser(context),
                 child: const Text(
@@ -222,6 +154,96 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Padding submitButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      child: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            if (_formKey.currentState!.validate()) {
+              // sry bro can u explain what this does
+              // final userProvider = Provider.of<UserProvider>(context, listen: false);
+              // final user = userProvider.validateCredentials(
+              //   emailController.text,
+              //   passwordController.text,
+              // );
+              // if (user != null) {
+              //   userProvider.login(user);
+              //   Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(builder: (context) => const MyHomePage()),
+              //   );
+              if (await validatePassword(
+                  emailController.text, passwordController.text, context)) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MyHomePage()),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid Credentials')),
+                );
+              }
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please fill input')),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+          ),
+          child: const Text('Submit', style: TextStyle(color: Colors.white)),
+        ),
+      ),
+    );
+  }
+
+  Padding passwordField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      child: TextFormField(
+        controller: passwordController,
+        obscureText: true,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Password",
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your password';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Padding emailField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      child: TextFormField(
+        controller: emailController,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: "Email",
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your email';
+          }
+          return null;
+        },
       ),
     );
   }
