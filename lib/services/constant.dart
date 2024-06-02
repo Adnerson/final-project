@@ -4,6 +4,7 @@ const postgresql = "/db/postgresql";
 
 const postgresqlUsers = "$postgresql/users/";
 const postgresqlDoctors = "$postgresql/doctors/";
+const postgresqlAppointments = "$postgresql/appointments/";
 
 
 // const allLists = "/";

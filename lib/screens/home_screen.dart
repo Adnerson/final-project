@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project1/classes.dart';
+import 'package:project1/services/func.dart';
 import 'package:project1/user_provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -15,7 +16,7 @@ class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
 }
 
-class HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> with Func {
   final TextEditingController symptomController = TextEditingController();
   String diagnosis = "";
 
@@ -66,7 +67,7 @@ class HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-           Padding(
+          Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
               'Hello ${args.name}! How can we help?',
@@ -103,8 +104,29 @@ class HomeScreenState extends State<HomeScreen> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-          // FutureBuilder(future: future,
-          // builder: builder) this is where we get the appointments
+          FutureBuilder<List<dynamic>>(
+            future: getAppointmentsPostgresql(context),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return ListView.builder(
+                  shrinkWrap: true, //without this it won't work
+                  physics: const NeverScrollableScrollPhysics(), 
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var entryList = snapshot.data!.toList();
+                    return Card(
+                      child: ListTile(
+                        leading: const Icon(Icons.list),
+                        title: Text(entryList[index]['title']),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const Text("error");
+              }
+            },
+          ),
         ],
       ),
     ));

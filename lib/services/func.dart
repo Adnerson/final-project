@@ -20,16 +20,16 @@ mixin Func {
   }
 
   Future<List<dynamic>> getUsersPostgresql(BuildContext context) async {
-    List<dynamic> lists = [];
+    List<dynamic> users = [];
     try {
       final response =
           await sendRequest(endpoint: postgresqlUsers, method: Method.GET);
-      lists = response.data as List<dynamic>;
+      users = response.data as List<dynamic>;
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Failed to fetch lists: $e")));
     }
-    return lists;
+    return users;
   }
 
   Future<List<dynamic>> getUserbyEmail(
@@ -51,4 +51,29 @@ mixin Func {
     return (user[0]['password'] == password);
   }
 
+  // Future<List<dynamic>> getAppointmentsByUser() async {
+  //   List<dynamic> appointments = [];
+  //   await sendRequest(endpoint: postgresqlUsers + appointments, method: Method.GET)
+  //       .then((itms) {
+  //     user = itms.data as List<dynamic>;
+  //   }).catchError((err) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text("Failed to fetch items")));
+  //   });
+  //   return user;
+  // }
+
+  Future<List<dynamic>> getAppointmentsPostgresql(BuildContext context) async {
+    List<dynamic> appointments = [];
+    try {
+      final response = await sendRequest(
+          endpoint: postgresqlAppointments, method: Method.GET);
+      appointments = response.data as List<dynamic>;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to fetch appointments: $e")));
+    }
+    print(appointments);
+    return appointments;
+  }
 }
