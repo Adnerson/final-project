@@ -15,41 +15,42 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final TextEditingController symptomController = TextEditingController();
+  String diagnosis = "";
 
   void getDiagnosis(String symptoms) async {
-  try {
-    const apiKey = '';
-    const endpoint = 'https://api.openai.com/v1/...';
-    final response = await http.post(
-      Uri.parse(endpoint),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $apiKey',
-      },
-      body: jsonEncode({
-        'prompt': "As a medical assistant, I'm tasked with receiving symptoms from a user and providing potential causes, future steps, and the type of doctor to refer to. The symptoms I received are: $symptoms",
-        'max_tokens': 150,
-        'stop': ['\n'],
-      }),
-    );
+    try {
+      const apiKey = 'YOUR_API_KEY_HERE'; // Replace with your actual API key
+      const endpoint = 'https://api.openai.com/v1/engines/davinci/completions';
+      final response = await http.post(
+        Uri.parse(endpoint),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $apiKey',
+        },
+        body: jsonEncode({
+          'prompt':
+              "As a medical assistant, I'm tasked with receiving symptoms from a user and providing potential causes, future steps, and the type of doctor to refer to. The symptoms I received are: $symptoms",
+          'max_tokens': 150,
+          'stop': ['\n'],
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      setState(() {
-        diagnosis = jsonResponse['choices'][0]['text'].trim();
-      });
-    } else {
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        setState(() {
+          diagnosis = jsonResponse['choices'][0]['text'].trim();
+        });
+      } else {
+        setState(() {
+          diagnosis = 'Failed to get diagnosis. Please try again later.';
+        });
+      }
+    } catch (e) {
       setState(() {
         diagnosis = 'Failed to get diagnosis. Please try again later.';
       });
     }
-  } catch (e) {
-    setState(() {
-      diagnosis = 'Failed to get diagnosis. Please try again later.';
-    });
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -102,19 +103,6 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            /*Container(
-              height: 200,
-              width: 400,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: SingleChildScrollView(
-                child: Text(diagnosis),
-              ),
-            ),*/
             Container(
               height: 200,
               padding: const EdgeInsets.all(8),
@@ -130,12 +118,14 @@ class HomeScreenState extends State<HomeScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18.0),
                 child: ListView.separated(
-                  separatorBuilder: (context, index) => const Divider(color: Colors.black),
+                  separatorBuilder: (context, index) =>
+                      const Divider(color: Colors.black),
                   itemCount: user!.appointments.length,
                   itemBuilder: (context, index) {
                     Appointment currentAppointment = user.appointments[index];
                     return ListTile(
-                      title: Text('${currentAppointment.title}: ${currentAppointment.getDate().toString().split(" ")[0]}'),
+                      title: Text(
+                          '${currentAppointment.title}: ${currentAppointment.getDate().toString().split(" ")[0]}'),
                       subtitle: Text('${currentAppointment.getDescription()}'),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
@@ -152,7 +142,8 @@ class HomeScreenState extends State<HomeScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                _showNewAppointmentDialog(context, userProvider.addAppointment);
+                _showNewAppointmentDialog(
+                    context, userProvider.addAppointment);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
@@ -168,7 +159,8 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showNewAppointmentDialog(BuildContext context, Function(Appointment) addAppointment) {
+  void _showNewAppointmentDialog(
+      BuildContext context, Function(Appointment) addAppointment) {
     showDialog(
       context: context,
       builder: (context) {
@@ -222,26 +214,17 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  readOnly: true,
-                  controller: TextEditingController(text: selectedDate != null ? DateFormat('yyyy-MM-dd').format(selectedDate!) : ''),
-                  decoration: const InputDecoration(
-                    labelText: 'Date',
-                    labelStyle: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  _selectDate(context);
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                child: const Text('Select Date', style: TextStyle(color: Colors.white)),
-              ),
-            ],
+          ElevatedButton(
+            onPressed: () {
+              _selectDate(context);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            child: Text(
+              selectedDate != null
+                  ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+                  : 'Select Date',
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
           const SizedBox(height: 10),
           TextField(
@@ -269,7 +252,11 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                   String title = TitleController.text;
                   String description = DescriptionController.text;
                   if (selectedDate != null) {
-                    Appointment newAppointment = Appointment(title, selectedDate!, description);
+                    Appointment newAppointment = Appointment(
+                      title,
+                      selectedDate!,
+                      description,
+                    );
                     widget.addAppointment(newAppointment);
                     Navigator.of(context).pop();
                   } else {

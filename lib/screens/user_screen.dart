@@ -120,7 +120,7 @@ class UserScreenState extends State<UserScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
               ),
-              child: const Text('Log out'),
+              child: const Text('Log out', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),

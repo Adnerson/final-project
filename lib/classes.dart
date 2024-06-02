@@ -11,7 +11,7 @@ class Medication {
 }
 
 class User {
-  static int _idCounter = 0;  // Static variable to keep track of the last id
+  static int _idCounter = 0;
   int userid;
   String name;
   String password;
@@ -56,7 +56,7 @@ class Doctor {
 }
 
 class Appointment {
-  static int _idCounter = 0;  // Static variable to keep track of the last id
+  static int _idCounter = 0;
   int appointmentid;
   String title;
   DateTime date;
