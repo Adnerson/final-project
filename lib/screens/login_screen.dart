@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project1/screens/home_screen.dart';
 import 'package:project1/services/func.dart';
 import 'package:provider/provider.dart';
 import 'package:project1/main.dart';
@@ -165,7 +166,6 @@ class _LoginScreenState extends State<LoginScreen> with Func {
         child: ElevatedButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              // sry bro can u explain what this does
               // final userProvider = Provider.of<UserProvider>(context, listen: false);
               // final user = userProvider.validateCredentials(
               //   emailController.text,
@@ -179,9 +179,22 @@ class _LoginScreenState extends State<LoginScreen> with Func {
               //   );
               if (await validatePassword(
                   emailController.text, passwordController.text, context)) {
+                List<dynamic> user =
+                    await getUserbyEmail(emailController.text, context);
+
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const MyHomePage()),
+                  MaterialPageRoute(
+                    builder: (context) => const MyHomePage(),
+                    settings: RouteSettings(
+                      arguments: UserArguments(
+                        id: user[0]['id'],
+                        name: user[0]['name'],
+                        address: user[0]['address'],
+                        phoneNumber: user[0]['phonenumber'],
+                      ),
+                    ),
+                  ),
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(

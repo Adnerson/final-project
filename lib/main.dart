@@ -34,7 +34,7 @@ class MyAppState extends State<MyApp> {
       routes: {
         '/diagnosis': (context) => const UserScreen(),
         '/call': (context) => const CallScreen(),
-        '/home': (context) => const MyHomePage(),
+        HomeScreen.routeName: (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
       },
       initialRoute: '/login',

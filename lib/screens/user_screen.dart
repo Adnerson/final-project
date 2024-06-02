@@ -29,7 +29,7 @@ class UserScreenState extends State<UserScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              user?.getName() ?? 'Unknown',
+              user?.getName() ?? 'unknown',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),

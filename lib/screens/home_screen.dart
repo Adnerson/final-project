@@ -11,6 +11,8 @@ class HomeScreen extends StatefulWidget {
 
   @override
   HomeScreenState createState() => HomeScreenState();
+
+  static const routeName = '/home';
 }
 
 class HomeScreenState extends State<HomeScreen> {
@@ -54,9 +56,62 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    final user = userProvider.user;
+    // final userProvider = Provider.of<UserProvider>(context);
+    // final user = userProvider.user;
+    final args = ModalRoute.of(context)!.settings.arguments as UserArguments;
 
+    return Scaffold(
+        body: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+           Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              'Hello ${args.name}! How can we help?',
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Card(
+              child: ListTile(
+            onTap: () {},
+            leading: const Icon(Icons.calendar_month),
+            title: const Text(
+              'Schedule a visit',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            subtitle: const Text("Didn't eat your apple today?"),
+            trailing: const Icon(Icons.arrow_right),
+          )),
+          Card(
+              child: ListTile(
+            onTap: () {},
+            leading: const Icon(Icons.health_and_safety),
+            title: const Text(
+              'DiagNOWsis™',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            subtitle: const Text(
+                'Powered by a deep learning network specifically designed to diagnose patients.'),
+            trailing: const Icon(Icons.arrow_right),
+          )),
+          const Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Text(
+              'Upcoming visits',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ),
+          // FutureBuilder(future: future,
+          // builder: builder) this is where we get the appointments
+        ],
+      ),
+    ));
+  }
+
+  Scaffold scaffold1(
+      User? user, UserProvider userProvider, BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -142,8 +197,7 @@ class HomeScreenState extends State<HomeScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                _showNewAppointmentDialog(
-                    context, userProvider.addAppointment);
+                _showNewAppointmentDialog(context, userProvider.addAppointment);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
@@ -245,7 +299,8 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                 ),
-                child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+                child:
+                    const Text('Cancel', style: TextStyle(color: Colors.white)),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -268,7 +323,8 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                 ),
-                child: const Text('Save', style: TextStyle(color: Colors.white)),
+                child:
+                    const Text('Save', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -276,4 +332,17 @@ class NewAppointmentWidgetState extends State<NewAppointmentWidget> {
       ),
     );
   }
+}
+
+class UserArguments {
+  final int id;
+  final String name;
+  final String? address;
+  final String? phoneNumber;
+
+  UserArguments(
+      {required this.id,
+      required this.name,
+      required this.address,
+      required this.phoneNumber});
 }

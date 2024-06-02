@@ -50,4 +50,5 @@ mixin Func {
     List<dynamic> user = await getUserbyEmail(email, context);
     return (user[0]['password'] == password);
   }
+
 }
