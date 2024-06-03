@@ -51,17 +51,17 @@ mixin Func {
     return (user[0]['password'] == password);
   }
 
-  // Future<List<dynamic>> getAppointmentsByUser() async {
-  //   List<dynamic> appointments = [];
-  //   await sendRequest(endpoint: postgresqlUsers + appointments, method: Method.GET)
-  //       .then((itms) {
-  //     user = itms.data as List<dynamic>;
-  //   }).catchError((err) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(const SnackBar(content: Text("Failed to fetch items")));
-  //   });
-  //   return user;
-  // }
+  Future<List<dynamic>> getAppointmentsById(BuildContext context, String id) async {
+    List<dynamic> appointments = [];
+    await sendRequest(endpoint: postgresqlAppointments + id, method: Method.GET)
+        .then((itms) {
+      appointments = itms.data as List<dynamic>;
+    }).catchError((err) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to fetch Appointments")));
+    });
+    return appointments;
+  }
 
   Future<List<dynamic>> getAppointmentsPostgresql(BuildContext context) async {
     List<dynamic> appointments = [];
@@ -73,7 +73,6 @@ mixin Func {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Failed to fetch appointments: $e")));
     }
-    print(appointments);
     return appointments;
   }
 }

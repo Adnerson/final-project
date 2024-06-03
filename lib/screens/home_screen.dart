@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:project1/classes.dart';
+import 'package:project1/screens/appointment.dart';
 import 'package:project1/services/func.dart';
 import 'package:project1/user_provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -105,19 +106,34 @@ class HomeScreenState extends State<HomeScreen> with Func {
             ),
           ),
           FutureBuilder<List<dynamic>>(
-            future: getAppointmentsPostgresql(context),
+            future: getAppointmentsById(context, args.id.toString()),
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                 return ListView.builder(
-                  shrinkWrap: true, //without this it won't work
-                  physics: const NeverScrollableScrollPhysics(), 
+                  shrinkWrap:
+                      true, //EXTREMELY IMPORTANT without this it won't work
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     var entryList = snapshot.data!.toList();
                     return Card(
                       child: ListTile(
-                        leading: const Icon(Icons.list),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AppointmentScreen.routeName,
+                            arguments: AppointmentArguments(
+                              id: args.id.toString(),
+                              appointmentDate: entryList[index]['appointmentdate'],
+                              title: entryList[index]['title'],
+                              description: entryList[index]['description'],
+                              status: entryList[index]['status'],
+                            ),
+                          );
+                        },
+                        leading: const Icon(Icons.assignment_ind),
                         title: Text(entryList[index]['title']),
+                        trailing: const Icon(Icons.arrow_right),
                       ),
                     );
                   },
