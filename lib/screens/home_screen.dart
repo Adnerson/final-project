@@ -105,47 +105,51 @@ class HomeScreenState extends State<HomeScreen> with Func {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
-          FutureBuilder<List<dynamic>>(
-            future: getAppointmentsById(context, args.id.toString()),
-            builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return ListView.builder(
-                  shrinkWrap:
-                      true, //EXTREMELY IMPORTANT without this it won't work
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    var entryList = snapshot.data!.toList();
-                    return Card(
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AppointmentScreen.routeName,
-                            arguments: AppointmentArguments(
-                              id: args.id.toString(),
-                              appointmentDate: entryList[index]['appointmentdate'],
-                              title: entryList[index]['title'],
-                              description: entryList[index]['description'],
-                              status: entryList[index]['status'],
-                            ),
-                          );
-                        },
-                        leading: const Icon(Icons.assignment_ind),
-                        title: Text(entryList[index]['title']),
-                        trailing: const Icon(Icons.arrow_right),
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return const Text("error");
-              }
-            },
-          ),
+          appointmentsBuilder(context, args),
         ],
       ),
     ));
+  }
+
+  FutureBuilder<List<dynamic>> appointmentsBuilder(
+      BuildContext context, UserArguments args) {
+    return FutureBuilder<List<dynamic>>(
+      future: getAppointmentsById(context, args.id.toString()),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            shrinkWrap: true, //EXTREMELY IMPORTANT without this it won't work
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int index) {
+              var entryList = snapshot.data!.toList();
+              return Card(
+                child: ListTile(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      AppointmentScreen.routeName,
+                      arguments: AppointmentArguments(
+                        id: args.id.toString(),
+                        appointmentDate: entryList[index]['appointmentdate'],
+                        title: entryList[index]['title'],
+                        description: entryList[index]['description'],
+                        status: entryList[index]['status'],
+                      ),
+                    );
+                  },
+                  leading: const Icon(Icons.assignment_ind),
+                  title: Text(entryList[index]['title']),
+                  trailing: const Icon(Icons.arrow_right),
+                ),
+              );
+            },
+          );
+        } else {
+          return const Text("error");
+        }
+      },
+    );
   }
 
   Scaffold scaffold1(

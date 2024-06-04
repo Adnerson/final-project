@@ -19,7 +19,30 @@ class _AppointmentState extends State<AppointmentScreen> {
       appBar: AppBar(
         title: Text("${args.id}'s Appointment"),
       ),
-      body: Text(args.title),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              args.title,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              args.appointmentDate,
+              style: const TextStyle(fontSize: 12),
+            ),
+            Text(
+              args.description,
+              style: const TextStyle(fontSize: 16),
+            ),
+    
+          ],
+        ),
+      ),
     );
   }
 }

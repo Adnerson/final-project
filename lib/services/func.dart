@@ -32,6 +32,19 @@ mixin Func {
     return users;
   }
 
+  Future<List<dynamic>> getDoctorsPostgresql(BuildContext context) async {
+    List<dynamic> doctors = [];
+    try {
+      final response =
+          await sendRequest(endpoint: postgresqlDoctors, method: Method.GET);
+      doctors = response.data as List<dynamic>;
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Failed to fetch doctors: $e")));
+    }
+    return doctors;
+  }
+
   Future<List<dynamic>> getUserbyEmail(
       String email, BuildContext context) async {
     List<dynamic> user = [];
