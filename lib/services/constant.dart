@@ -1,4 +1,5 @@
-const baseUrl = "http://localhost:8080";
+// const baseUrl = "http://localhost:8080"; this is if you are hosting the server on your machine
+const baseUrl = "http://192.168.1.17:8080"; //this works on my personal Wi-Fi
 
 const postgresql = "/db/postgresql";
 
@@ -10,7 +11,7 @@ const postgresqlAppointments = "$postgresql/appointments/";
 // const allLists = "/";
 // const newList = "/lists";
 // const singleList = "$newList/";
-// const items = "/items";
+// const items = "/items"
 // const itemsByList = "$items/";
 // const singleItem = "$items/";
 
