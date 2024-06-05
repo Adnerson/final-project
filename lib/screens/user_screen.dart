@@ -16,116 +16,120 @@ class UserScreenState extends State<UserScreen> {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
 
+    return profileScreen(user, userProvider, context);
+  }
+
+  Scaffold profileScreen(User? user, UserProvider userProvider, BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const CircleAvatar(
-              radius: 64,
-              backgroundImage: NetworkImage('https://i.pinimg.com/736x/a8/57/00/a85700f3c614f6313750b9d8196c08f5.jpg'),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              user?.getName() ?? 'unknown',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              user?.getEmail() ?? 'Unknown',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              user?.getNumber() ?? 'Unknown',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Track your Medications',
-              style: TextStyle(fontSize: 16),
-            ),
-            Container(
-              height: 200,
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
+    body: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const CircleAvatar(
+            radius: 64,
+            backgroundImage: NetworkImage('https://i.pinimg.com/736x/a8/57/00/a85700f3c614f6313750b9d8196c08f5.jpg'),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            user?.getName() ?? 'unknown',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            user?.getEmail() ?? 'Unknown',
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            user?.getNumber() ?? 'Unknown',
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Track your Medications',
+            style: TextStyle(fontSize: 16),
+          ),
+          Container(
+            height: 200,
+            padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.blue,
+                width: 2.0,
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(18.0),
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const Divider(color: Colors.black),
-                  itemCount: user?.medications.length ?? 0,
-                  itemBuilder: (context, index) {
-                    Medication currentMedication = user!.medications[index];
-                    return ListTile(
-                      title: Text(currentMedication.name),
-                      subtitle: Text(
-                        'Take ${currentMedication.getNumber()} pills at ${currentMedication.getTime()}',
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            userProvider.removeMedication(index);
-                          });
-                        },
-                      ),
-                    );
-                  },
-                ),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(18.0),
+              child: ListView.separated(
+                separatorBuilder: (context, index) => const Divider(color: Colors.black),
+                itemCount: user?.medications.length ?? 0,
+                itemBuilder: (context, index) {
+                  Medication currentMedication = user!.medications[index];
+                  return ListTile(
+                    title: Text(currentMedication.name),
+                    subtitle: Text(
+                      'Take ${currentMedication.getNumber()} pills at ${currentMedication.getTime()}',
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          userProvider.removeMedication(index);
+                        });
+                      },
+                    ),
+                  );
+                },
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                _showNewMedicationDialog(context, (newMedication) {
-                  setState(() {
-                    userProvider.addMedication(newMedication);
-                  });
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _showNewMedicationDialog(context, (newMedication) {
+                setState(() {
+                  userProvider.addMedication(newMedication);
                 });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              child: const Text(
-                'Add Medication',
-                style: TextStyle(color: Colors.white),
-              ),
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
             ),
-            ElevatedButton(
-              onPressed: () {
-                _showEditAccountDialog(context, userProvider);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              child: const Text(
-                'Edit Account',
-                style: TextStyle(color: Colors.white),
-              ),
+            child: const Text(
+              'Add Medication',
+              style: TextStyle(color: Colors.white),
             ),
-            ElevatedButton(
-              onPressed: () {
-                userProvider.logout();
-                Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              child: const Text('Log out', style: TextStyle(color: Colors.white)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _showEditAccountDialog(context, userProvider);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
             ),
-          ],
-        ),
+            child: const Text(
+              'Edit Account',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              userProvider.logout();
+              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+            ),
+            child: const Text('Log out', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
-    );
+    ),
+  );
   }
 
   void _showNewMedicationDialog(BuildContext context, Function(Medication) addMedication) {
