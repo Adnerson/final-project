@@ -68,47 +68,65 @@ class HomeScreenState extends State<HomeScreen> with Func {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              'Hello ${args.name}! How can we help?',
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Card(
-              child: ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.calendar_month),
-            title: const Text(
-              'Schedule a visit',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            subtitle: const Text("Didn't eat your apple today?"),
-            trailing: const Icon(Icons.arrow_right),
-          )),
-          Card(
-              child: ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.health_and_safety),
-            title: const Text(
-              'DiagNOWsis™',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            subtitle: const Text(
-                'Powered by a deep learning network specifically designed to diagnose patients.'),
-            trailing: const Icon(Icons.arrow_right),
-          )),
-          const Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Text(
-              'Upcoming visits',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
+          greetUser(args),
+          scheduleAppointmentButton(args),
+          diagnosisButton(),
+          upcomingVisitsText(),
           appointmentsBuilder(context, args),
         ],
       ),
     ));
+  }
+
+  Padding greetUser(UserArguments args) {
+    return Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Hello ${args.name}! How can we help?',
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+        );
+  }
+
+  Card scheduleAppointmentButton(UserArguments args) {
+    return Card(
+            child: ListTile(
+          onTap: () {
+            Navigator.pushNamed(context, '/schedule_appointment', arguments: args.id);
+          },
+          leading: const Icon(Icons.calendar_month),
+          title: const Text(
+            'Schedule a visit',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text("Didn't eat your apple today?"),
+          trailing: const Icon(Icons.arrow_right),
+        ));
+  }
+
+  Card diagnosisButton() {
+    return Card(
+            child: ListTile(
+          onTap: () {},
+          leading: const Icon(Icons.health_and_safety),
+          title: const Text(
+            'DiagNOWsis™',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text(
+              'Powered by a deep learning network specifically designed to diagnose patients.'),
+          trailing: const Icon(Icons.arrow_right),
+        ));
+  }
+
+  Padding upcomingVisitsText() {
+    return const Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Text(
+            'Upcoming visits',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+        );
   }
 
   FutureBuilder<List<dynamic>> appointmentsBuilder(
