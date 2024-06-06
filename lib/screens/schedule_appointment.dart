@@ -37,17 +37,18 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
                 color: Color.fromARGB(210, 10, 10, 150),
               ),
             ),
-            field(_title),
+            titleField(),
+            descriptionField(),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 monthSelector(),
                 TimeSelector(),
               ],
             ),
-            field(_description),
-            Expanded(
-              child: Container(), // This takes up the remaining space
-            ),
+            // Expanded(
+            //   child: Container(), // This takes up the remaining space
+            // ),
             submitButton(),
           ],
         ),
@@ -62,7 +63,6 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
       //   backgroundColor: Colors.blue.withOpacity(0.75), // Text color
       // ),
       onPressed: () {},
-
       child: Row(
         children: [
           Container(
@@ -163,17 +163,50 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
     );
   }
 
-  Container field(TextEditingController controller) {
+  Container titleField() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: TextFormField(
-        controller: controller,
-        decoration:  InputDecoration(
-          
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30), ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.blue),
+        controller: _title,
+        decoration: InputDecoration(
+          isCollapsed: true,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
           ),
+          // focusedBorder: const OutlineInputBorder(
+          //   borderSide: BorderSide(color: Colors.blue),
+          // ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter a value in the field';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Container descriptionField() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: TextFormField(
+        controller: _description,
+        minLines: 12,
+        maxLines: 12,
+        decoration: InputDecoration(
+          hintText: 'Description',
+          isCollapsed: true,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          // focusedBorder: const OutlineInputBorder(
+          //   borderSide: BorderSide(color: Colors.blue),
+          // ),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
