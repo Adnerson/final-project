@@ -156,7 +156,6 @@ class _LoginScreenState extends State<LoginScreen> with Func {
           ),
         ),
       ),
-
     );
   }
 
@@ -183,20 +182,26 @@ class _LoginScreenState extends State<LoginScreen> with Func {
                 List<dynamic> user =
                     await getUserbyEmail(emailController.text, context);
 
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MyHomePage(),
-                    settings: RouteSettings(
-                      arguments: UserArguments(
-                        id: user[0]['id'],
-                        name: user[0]['name'],
-                        address: user[0]['address'],
-                        phoneNumber: user[0]['phonenumber'],
+                switch (user[0]['isDoctor']) {
+                  case true:
+                    Navigator.pushNamed(context, '/doctor'); //goes to doctor screen
+                    break;
+                  default:
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyHomePage(),
+                        settings: RouteSettings(
+                          arguments: UserArguments(
+                            id: user[0]['id'],
+                            name: user[0]['name'],
+                            address: user[0]['address'],
+                            phoneNumber: user[0]['phonenumber'],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                );
+                    );
+                }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Invalid Credentials')),
