@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:project1/classes.dart';
+import 'package:project1/screens/appointment.dart';
+import 'package:project1/services/func.dart';
 import 'package:project1/user_provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +17,7 @@ class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
 }
 
-class HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> with Func {
   final TextEditingController symptomController = TextEditingController();
   String diagnosis = "";
 
@@ -66,48 +68,106 @@ class HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-           Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              'Hello ${args.name}! How can we help?',
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Card(
-              child: ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.calendar_month),
-            title: const Text(
-              'Schedule a visit',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            subtitle: const Text("Didn't eat your apple today?"),
-            trailing: const Icon(Icons.arrow_right),
-          )),
-          Card(
-              child: ListTile(
-            onTap: () {},
-            leading: const Icon(Icons.health_and_safety),
-            title: const Text(
-              'DiagNOWsis™',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            subtitle: const Text(
-                'Powered by a deep learning network specifically designed to diagnose patients.'),
-            trailing: const Icon(Icons.arrow_right),
-          )),
-          const Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Text(
-              'Upcoming visits',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
-          // FutureBuilder(future: future,
-          // builder: builder) this is where we get the appointments
+          greetUser(args),
+          scheduleAppointmentButton(args),
+          diagnosisButton(),
+          upcomingVisitsText(),
+          appointmentsBuilder(context, args),
         ],
       ),
     ));
+  }
+
+  Padding greetUser(UserArguments args) {
+    return Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Hello ${args.name}! How can we help?',
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+        );
+  }
+
+  Card scheduleAppointmentButton(UserArguments args) {
+    return Card(
+            child: ListTile(
+          onTap: () {
+            Navigator.pushNamed(context, '/schedule_appointment', arguments: args.id);
+          },
+          leading: const Icon(Icons.calendar_month),
+          title: const Text(
+            'Schedule a visit',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text("Didn't eat your apple today?"),
+          trailing: const Icon(Icons.arrow_right),
+        ));
+  }
+
+  Card diagnosisButton() {
+    return Card(
+            child: ListTile(
+          onTap: () {},
+          leading: const Icon(Icons.health_and_safety),
+          title: const Text(
+            'DiagNOWsis™',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text(
+              'Powered by a deep learning network specifically designed to diagnose patients.'),
+          trailing: const Icon(Icons.arrow_right),
+        ));
+  }
+
+  Padding upcomingVisitsText() {
+    return const Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Text(
+            'Upcoming visits',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+        );
+  }
+
+  FutureBuilder<List<dynamic>> appointmentsBuilder(
+      BuildContext context, UserArguments args) {
+    return FutureBuilder<List<dynamic>>(
+      future: getAppointmentsById(context, args.id.toString()),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            shrinkWrap: true, //EXTREMELY IMPORTANT without this it won't work
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int index) {
+              var entryList = snapshot.data!.toList();
+              return Card(
+                child: ListTile(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      AppointmentScreen.routeName,
+                      arguments: AppointmentArguments(
+                        id: args.id.toString(),
+                        appointmentDate: entryList[index]['appointmentdate'],
+                        title: entryList[index]['title'],
+                        description: entryList[index]['description'],
+                        status: entryList[index]['status'],
+                      ),
+                    );
+                  },
+                  leading: const Icon(Icons.assignment_ind),
+                  title: Text(entryList[index]['title']),
+                  trailing: const Icon(Icons.arrow_right),
+                ),
+              );
+            },
+          );
+        } else {
+          return const Text("error");
+        }
+      },
+    );
   }
 
   Scaffold scaffold1(

@@ -20,16 +20,29 @@ mixin Func {
   }
 
   Future<List<dynamic>> getUsersPostgresql(BuildContext context) async {
-    List<dynamic> lists = [];
+    List<dynamic> users = [];
     try {
       final response =
           await sendRequest(endpoint: postgresqlUsers, method: Method.GET);
-      lists = response.data as List<dynamic>;
+      users = response.data as List<dynamic>;
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Failed to fetch lists: $e")));
     }
-    return lists;
+    return users;
+  }
+
+  Future<List<dynamic>> getDoctorsPostgresql(BuildContext context) async {
+    List<dynamic> doctors = [];
+    try {
+      final response =
+          await sendRequest(endpoint: postgresqlDoctors, method: Method.GET);
+      doctors = response.data as List<dynamic>;
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Failed to fetch doctors: $e")));
+    }
+    return doctors;
   }
 
   Future<List<dynamic>> getUserbyEmail(
@@ -51,4 +64,43 @@ mixin Func {
     return (user[0]['password'] == password);
   }
 
+  Future<List<dynamic>> getAppointmentsById(
+      BuildContext context, String id) async {
+    List<dynamic> appointments = [];
+    await sendRequest(endpoint: postgresqlAppointments + id, method: Method.GET)
+        .then((itms) {
+      appointments = itms.data as List<dynamic>;
+    }).catchError((err) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to fetch Appointments")));
+    });
+    return appointments;
+  }
+
+  Future<List<dynamic>> getAppointmentsPostgresql(BuildContext context) async {
+    List<dynamic> appointments = [];
+    try {
+      final response = await sendRequest(
+          endpoint: postgresqlAppointments, method: Method.GET);
+      appointments = response.data as List<dynamic>;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to fetch appointments: $e")));
+    }
+    return appointments;
+  }
+
+  createAppointmentUsingPostgresql(String id, String appointmentDate,
+      String title, String description, bool status) async {
+    await sendRequest(
+        endpoint: postgresqlAppointments,
+        method: Method.POST,
+        params: {
+          "id": id,
+          "appointmentDate": appointmentDate,
+          "title": title,
+          "description": description,
+          "status": status
+        });
+  }
 }
