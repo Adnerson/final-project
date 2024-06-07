@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project1/screens/appointment.dart';
+import 'package:project1/screens/doctorscreens/doctor_home.dart';
 import 'package:project1/screens/schedule_appointment.dart';
 import 'package:project1/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class MyAppState extends State<MyApp> {
         '/login': (context) => const LoginScreen(),
         AppointmentScreen.routeName: (context) => const AppointmentScreen(),
         '/schedule_appointment':(context) => const ScheduleAppointment(),
+        '/doctor': (context) => const DoctorHome(),
       },
       initialRoute: '/login',
       debugShowCheckedModeBanner: false,
