@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:project1/services/func.dart';
 
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class DoctorAppointmentScreen extends StatefulWidget {
+  const DoctorAppointmentScreen({super.key});
 
   @override
-  HomeScreenState createState() => HomeScreenState();
+  DoctorAppointmentScreenState createState() => DoctorAppointmentScreenState();
 
   static const routeName = '/home';
 }
 
-class HomeScreenState extends State<HomeScreen> with Func {
+class DoctorAppointmentScreenState extends State<DoctorAppointmentScreen> with Func {
 
   @override
   Widget build(BuildContext context) {

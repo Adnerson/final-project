@@ -57,7 +57,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
   final List<Widget> _screens = [
     const CallScreen(),
     const HomeScreen(),
