@@ -40,7 +40,7 @@ class MyAppState extends State<MyApp> {
         HomeScreen.routeName: (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
         AppointmentScreen.routeName: (context) => const AppointmentScreen(),
-        '/schedule_appointment':(context) => const ScheduleAppointment(),
+        '/schedule_appointment': (context) => const ScheduleAppointment(),
         '/doctor': (context) => const DoctorHomePage(),
       },
       initialRoute: '/login',
@@ -57,7 +57,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   final List<Widget> _screens = [
     const CallScreen(),
     const HomeScreen(),

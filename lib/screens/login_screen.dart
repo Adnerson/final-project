@@ -166,17 +166,6 @@ class _LoginScreenState extends State<LoginScreen> with Func {
         child: ElevatedButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              // final userProvider = Provider.of<UserProvider>(context, listen: false);
-              // final user = userProvider.validateCredentials(
-              //   emailController.text,
-              //   passwordController.text,
-              // );
-              // if (user != null) {
-              //   userProvider.login(user);
-              //   Navigator.pushReplacement(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => const MyHomePage()),
-              //   );
               if (await validatePassword(
                   emailController.text, passwordController.text, context)) {
                 List<dynamic> user =
@@ -184,7 +173,8 @@ class _LoginScreenState extends State<LoginScreen> with Func {
 
                 switch (user[0]['isDoctor']) {
                   case true:
-                    Navigator.pushNamed(context, '/doctor'); //goes to doctor screen
+                    Navigator.pushNamed(
+                        context, '/doctor'); //goes to doctor screen
                     break;
                   default:
                     Navigator.pushReplacement(
@@ -195,8 +185,9 @@ class _LoginScreenState extends State<LoginScreen> with Func {
                           arguments: UserArguments(
                             id: user[0]['id'],
                             name: user[0]['name'],
+                            email: user[0]['email'],
                             address: user[0]['address'],
-                            phoneNumber: user[0]['phonenumber'],
+                            phoneNumber: user[0]['phoneNumber'],
                           ),
                         ),
                       ),

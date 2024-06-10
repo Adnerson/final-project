@@ -12,8 +12,8 @@ class DoctorHomePage extends StatefulWidget {
 class MyDoctorPageState extends State<DoctorHomePage> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
+    const DoctorAppointmentScreen(),
     const DoctorProfileScreen(),
-    const DoctorAppointmentScreen()
   ];
 
   @override
