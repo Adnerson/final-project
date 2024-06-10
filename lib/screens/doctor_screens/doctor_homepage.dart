@@ -43,15 +43,30 @@ class MyDoctorPageState extends State<DoctorHomePage> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.phone),
-            label: 'Contact',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.phone),
+            label: 'Contact',
           ),
         ],
       ),
     );
   }
+}
+
+class UserArguments {
+  final int id;
+  final String name;
+  final String email;
+  final String? address;
+  final String? phoneNumber;
+
+  UserArguments(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.address,
+      required this.phoneNumber});
 }

@@ -171,10 +171,19 @@ class _LoginScreenState extends State<LoginScreen> with Func {
                 List<dynamic> user =
                     await getUserbyEmail(emailController.text, context);
 
+                UserArguments userCast = UserArguments(
+                  id: user[0]['id'],
+                  name: user[0]['name'],
+                  email: user[0]['email'],
+                  address: user[0]['address'],
+                  phoneNumber: user[0]['phoneNumber'],
+                );
+
                 switch (user[0]['isDoctor']) {
                   case true:
-                    Navigator.pushNamed(
-                        context, '/doctor'); //goes to doctor screen
+                    Navigator.pushNamed(context, '/doctor',
+                        arguments:
+                            userCast); //needs to be pushreplacement, but its like 12am not top priority
                     break;
                   default:
                     Navigator.pushReplacement(
@@ -182,13 +191,7 @@ class _LoginScreenState extends State<LoginScreen> with Func {
                       MaterialPageRoute(
                         builder: (context) => const MyHomePage(),
                         settings: RouteSettings(
-                          arguments: UserArguments(
-                            id: user[0]['id'],
-                            name: user[0]['name'],
-                            email: user[0]['email'],
-                            address: user[0]['address'],
-                            phoneNumber: user[0]['phoneNumber'],
-                          ),
+                          arguments: userCast,
                         ),
                       ),
                     );
