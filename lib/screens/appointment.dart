@@ -36,10 +36,9 @@ class _AppointmentState extends State<AppointmentScreen> {
               style: const TextStyle(fontSize: 12),
             ),
             Text(
-              args.description,
+              args.description ?? 'error',
               style: const TextStyle(fontSize: 16),
             ),
-    
           ],
         ),
       ),
@@ -51,7 +50,7 @@ class AppointmentArguments {
   String id;
   String appointmentDate;
   String title;
-  String description;
+  String? description;
   bool status;
 
   AppointmentArguments({

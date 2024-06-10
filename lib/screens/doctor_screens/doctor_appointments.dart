@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project1/screens/appointment.dart';
+import 'package:project1/screens/doctor_screens/doctor_view_appointment.dart';
 import 'package:project1/screens/home_screen.dart';
 import 'package:project1/services/func.dart';
 
@@ -25,7 +27,7 @@ class DoctorAppointmentScreenState extends State<DoctorAppointmentScreen>
         children: [
           greetUser(args),
           upcomingVisitsText(),
-          appointmentsBuilder(context, args),
+          appointmentsBuilder(context),
         ],
       ),
     ));
@@ -51,8 +53,7 @@ class DoctorAppointmentScreenState extends State<DoctorAppointmentScreen>
     );
   }
 
-  FutureBuilder<List<dynamic>> appointmentsBuilder(
-      BuildContext context, UserArguments args) {
+  FutureBuilder<List<dynamic>> appointmentsBuilder(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
       future: getAppointmentsPostgresql(context),
       builder: (context, snapshot) {
@@ -66,17 +67,17 @@ class DoctorAppointmentScreenState extends State<DoctorAppointmentScreen>
               return Card(
                 child: ListTile(
                   onTap: () {
-                    // Navigator.pushNamed(
-                    //   context,
-                    //   AppointmentScreen.routeName,
-                    //   arguments: AppointmentArguments(
-                    //     id: args.id.toString(),
-                    //     appointmentDate: entryList[index]['appointmentdate'],
-                    //     title: entryList[index]['title'],
-                    //     description: entryList[index]['description'],
-                    //     status: entryList[index]['status'],
-                    //   ),
-                    // );
+                    Navigator.pushNamed(
+                      context,
+                      DoctorViewAppointment.routeName,
+                      // argViewAppointmentDoctorViewAppointmentntArguments(
+                      //   id: entryList[index]['id'].toString(),
+                      //   appointmentDate: entryList[index]['appointmentdate'],
+                      //   title: entryList[index]['title'],
+                      //   description: entryList[index]['description'],
+                      //   status: entryList[index]['status'],
+                      // ),
+                    );
                   },
                   leading: const Icon(Icons.assignment_ind),
                   title: Text(entryList[index]['title']),
