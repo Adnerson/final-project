@@ -64,6 +64,7 @@ class HomeScreenState extends State<HomeScreen> with Func {
 
     return Scaffold(
         body: SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -80,53 +81,59 @@ class HomeScreenState extends State<HomeScreen> with Func {
 
   Padding greetUser(UserArguments args) {
     return Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text(
-            'Hello ${args.name}! How can we help?',
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-        );
+      padding: const EdgeInsets.all(15.0),
+      child: Text(
+        'Hello ${args.name}! How can we help?',
+        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
   Card scheduleAppointmentButton(UserArguments args) {
     return Card(
-            child: ListTile(
-          onTap: () {
-            Navigator.pushNamed(context, '/schedule_appointment', arguments: args.id);
-          },
-          leading: const Icon(Icons.calendar_month),
-          title: const Text(
-            'Schedule a visit',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          subtitle: const Text("Didn't eat your apple today?"),
-          trailing: const Icon(Icons.arrow_right),
-        ));
+        child: ListTile(
+      onTap: () async {
+        final result = await Navigator.pushNamed(
+            context, '/schedule_appointment',
+            arguments: args.id);
+
+        if (result != null) {
+          setState(() {});
+        }
+      },
+      leading: const Icon(Icons.calendar_month),
+      title: const Text(
+        'Schedule a visit',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      subtitle: const Text("Didn't eat your apple today?"),
+      trailing: const Icon(Icons.arrow_right),
+    ));
   }
 
   Card diagnosisButton() {
     return Card(
-            child: ListTile(
-          onTap: () {},
-          leading: const Icon(Icons.health_and_safety),
-          title: const Text(
-            'DiagNOWsis™',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          subtitle: const Text(
-              'Powered by a deep learning network specifically designed to diagnose patients.'),
-          trailing: const Icon(Icons.arrow_right),
-        ));
+        child: ListTile(
+      onTap: () {},
+      leading: const Icon(Icons.health_and_safety),
+      title: const Text(
+        'DiagNOWsis™',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      subtitle: const Text(
+          'Powered by a deep learning network specifically designed to diagnose patients.'),
+      trailing: const Icon(Icons.arrow_right),
+    ));
   }
 
   Padding upcomingVisitsText() {
     return const Padding(
-          padding: EdgeInsets.all(15.0),
-          child: Text(
-            'Upcoming visits',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-        );
+      padding: EdgeInsets.all(15.0),
+      child: Text(
+        'Upcoming visits',
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
   FutureBuilder<List<dynamic>> appointmentsBuilder(
