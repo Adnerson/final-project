@@ -103,4 +103,15 @@ mixin Func {
           "status": status
         });
   }
+
+  createUser(String name, String email, String password, String address,
+      String phone) async {
+    await sendRequest(endpoint: postgresqlUsers, method: Method.POST, params: {
+      "name": name,
+      "email": email,
+      "password": password,
+      "address": address,
+      "phoneNumber": phone,
+    });
+  }
 }

@@ -3,8 +3,7 @@ import 'package:project1/screens/home_screen.dart';
 import 'package:project1/services/func.dart';
 import 'package:provider/provider.dart';
 import 'package:project1/main.dart';
-import 'package:project1/classes.dart';
-import 'package:project1/user_provider.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -97,16 +96,12 @@ class _LoginScreenState extends State<LoginScreen> with Func {
             TextButton(
               onPressed: () {
                 if (createFormKey.currentState!.validate()) {
-                  final user = User(
-                    nameController.text,
-                    emailController.text,
-                    passwordController.text,
-                    false,
-                    addressController.text,
-                    numberController.text,
-                  );
-                  Provider.of<UserProvider>(context, listen: false)
-                      .createUser(user);
+                  createUser(
+                      nameController.text,
+                      emailController.text,
+                      passwordController.text,
+                      addressController.text,
+                      numberController.text);
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('User created successfully!')),
@@ -166,24 +161,26 @@ class _LoginScreenState extends State<LoginScreen> with Func {
         child: ElevatedButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
+              // final userProvider = Provider.of<UserProvider>(context, listen: false);
+              // final user = userProvider.validateCredentials(
+              //   emailController.text,
+              //   passwordController.text,
+              // );
+              // if (user != null) {
+              //   userProvider.login(user);
+              //   Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(builder: (context) => const MyHomePage()),
+              //   );
               if (await validatePassword(
                   emailController.text, passwordController.text, context)) {
                 List<dynamic> user =
                     await getUserbyEmail(emailController.text, context);
 
-                UserArguments userCast = UserArguments(
-                  id: user[0]['id'],
-                  name: user[0]['name'],
-                  email: user[0]['email'],
-                  address: user[0]['address'],
-                  phoneNumber: user[0]['phoneNumber'],
-                );
-
                 switch (user[0]['isDoctor']) {
                   case true:
-                    Navigator.pushNamed(context, '/doctor',
-                        arguments:
-                            userCast); //needs to be pushreplacement, but its like 12am not top priority
+                    Navigator.pushNamed(
+                        context, '/doctor'); //goes to doctor screen
                     break;
                   default:
                     Navigator.pushReplacement(
@@ -191,7 +188,13 @@ class _LoginScreenState extends State<LoginScreen> with Func {
                       MaterialPageRoute(
                         builder: (context) => const MyHomePage(),
                         settings: RouteSettings(
-                          arguments: userCast,
+                          arguments: UserArguments(
+                            id: user[0]['id'],
+                            name: user[0]['name'],
+                            email: user[0]['email'],
+                            address: user[0]['address'],
+                            phoneNumber: user[0]['phonenumber'],
+                          ),
                         ),
                       ),
                     );
